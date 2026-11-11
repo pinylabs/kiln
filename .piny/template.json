@@ -1,0 +1,8 @@
+{
+  "form": 1,
+  "name": "Kiln",
+  "line": "A potter's small firings, sold through Stripe's hosted checkout",
+  "order": 50,
+  "thumbnail": ".piny/thumbnail.webp",
+  "preview": ".piny/preview.webp"
+}
