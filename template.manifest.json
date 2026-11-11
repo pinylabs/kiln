@@ -1,0 +1,16 @@
+{
+  "name": "Kiln",
+  "line": "A warm EmDash shop for a potter's small firings, its pieces an EmDash collection and its checkout Stripe's hosted page.",
+  "kind": "emdash",
+  "category": "commerce",
+  "stacks": [
+    "astro",
+    "emdash",
+    "stripe"
+  ],
+  "status": "preview",
+  "demo": null,
+  "preview": null,
+  "licence": "MIT",
+  "basedOn": "EmDash starter-cloudflare template, 1.4.0 (MIT, Cloudflare)"
+}
