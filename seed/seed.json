@@ -2,13 +2,13 @@
 	"$schema": "https://emdashcms.com/seed.schema.json",
 	"version": "1",
 	"meta": {
-		"name": "Starter",
-		"description": "A minimal EmDash starter with posts and pages",
-		"author": "EmDash"
+		"name": "Kiln",
+		"description": "A small ceramics shop: a potter's pieces as an EmDash collection, with notes from the studio and pages for care and shipping",
+		"author": "Piny"
 	},
 	"settings": {
-		"title": "My Site",
-		"tagline": "Built with EmDash"
+		"title": "Kiln",
+		"tagline": "Stoneware made by hand"
 	},
 	"collections": [
 		{
@@ -135,35 +135,49 @@
 			"labelSingular": "Category",
 			"hierarchical": true,
 			"collections": [
+				"products",
 				"posts"
 			],
 			"terms": [
 				{
-					"slug": "general",
-					"label": "General"
+					"slug": "mugs",
+					"label": "Mugs"
 				},
 				{
-					"slug": "updates",
-					"label": "Updates"
+					"slug": "bowls",
+					"label": "Bowls"
+				},
+				{
+					"slug": "plates",
+					"label": "Plates"
+				},
+				{
+					"slug": "firings",
+					"label": "Firings"
 				}
 			]
 		},
 		{
 			"name": "tag",
-			"label": "Tags",
-			"labelSingular": "Tag",
+			"label": "Glazes",
+			"labelSingular": "Glaze",
 			"hierarchical": false,
 			"collections": [
+				"products",
 				"posts"
 			],
 			"terms": [
 				{
-					"slug": "starter",
-					"label": "Starter"
+					"slug": "speckled-white",
+					"label": "Speckled white"
 				},
 				{
-					"slug": "example",
-					"label": "Example"
+					"slug": "porcelain-slip",
+					"label": "Porcelain slip"
+				},
+				{
+					"slug": "ash-glaze",
+					"label": "Ash glaze"
 				}
 			]
 		}
@@ -180,13 +194,28 @@
 				},
 				{
 					"type": "custom",
-					"label": "Posts",
+					"label": "Pieces",
+					"url": "/products"
+				},
+				{
+					"type": "custom",
+					"label": "Notes",
 					"url": "/posts"
 				},
 				{
 					"type": "custom",
-					"label": "About",
+					"label": "The studio",
 					"url": "/about"
+				},
+				{
+					"type": "custom",
+					"label": "Care",
+					"url": "/care"
+				},
+				{
+					"type": "custom",
+					"label": "Shipping",
+					"url": "/shipping"
 				}
 			]
 		}
@@ -210,7 +239,7 @@
 				{
 					"type": "component",
 					"componentId": "core:recent-posts",
-					"title": "Recent Posts",
+					"title": "Studio notes",
 					"props": {
 						"count": 5
 					}
@@ -219,84 +248,758 @@
 		}
 	],
 	"content": {
-		"pages": [
+		"products": [
 			{
-				"id": "about",
-				"slug": "about",
+				"id": "product-morning-mug-pair",
+				"slug": "morning-mug-pair",
 				"status": "published",
 				"data": {
-					"title": "About",
+					"title": "Morning mug, pair",
+					"price": "$68",
+					"excerpt": "Speckled white · 350 ml",
+					"featured_image": {
+						"$media": {
+							"url": "https://images.unsplash.com/photo-1536936812504-0e77dc3f0b40?w=1600&q=80&fm=jpg&fit=max",
+							"alt": "Two white stoneware mugs",
+							"filename": "kiln-morning-mug-pair.jpg"
+						}
+					},
 					"content": [
 						{
 							"_type": "block",
+							"_key": "k0",
 							"style": "normal",
+							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"text": "This is the about page. Edit it in the admin panel or replace this template with your own design.",
-									"_key": "k1"
+									"_key": "k1",
+									"text": "Two mugs for the first coffee of the day, thrown as a pair and fired side by side. A speckled white glaze over stoneware, with the iron in the clay coming through as small brown flecks.",
+									"marks": []
 								}
-							],
-							"_key": "k0"
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k2",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k3",
+									"text": "Each holds 350 ml, with a handle wide enough for three fingers and a foot left bare so you can feel the clay. Because they are made by hand, the two are close cousins rather than twins.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k4",
+							"style": "h2",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k5",
+									"text": "The details",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k6",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k7",
+									"text": "Stoneware, fired twice. Dishwasher and microwave safe. Sold as a pair.",
+									"marks": []
+								}
+							]
 						}
+					]
+				},
+				"taxonomies": {
+					"category": [
+						"mugs"
+					],
+					"tag": [
+						"speckled-white"
+					]
+				}
+			},
+			{
+				"id": "product-rice-bowls",
+				"slug": "rice-bowls",
+				"status": "published",
+				"data": {
+					"title": "Rice bowls",
+					"price": "$54",
+					"excerpt": "Set of two",
+					"featured_image": {
+						"$media": {
+							"url": "https://images.unsplash.com/photo-1530006498959-b7884e829a04?w=1600&q=80&fm=jpg&fit=max",
+							"alt": "Two speckled bowls",
+							"filename": "kiln-rice-bowls.jpg"
+						}
+					},
+					"content": [
+						{
+							"_type": "block",
+							"_key": "k8",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k9",
+									"text": "A set of two small bowls for rice, broth or a handful of fruit. Thrown thin at the rim and trimmed with a tall foot, so they sit comfortably in one hand.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k10",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k11",
+									"text": "The speckled glaze breaks to a warm brown where it thins over the rim and the trimming lines.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k12",
+							"style": "h2",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k13",
+									"text": "The details",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k14",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k15",
+									"text": "Stoneware, fired twice. Dishwasher and microwave safe. Sold as a set of two.",
+									"marks": []
+								}
+							]
+						}
+					]
+				},
+				"taxonomies": {
+					"category": [
+						"bowls"
+					],
+					"tag": [
+						"speckled-white"
+					]
+				}
+			},
+			{
+				"id": "product-plain-bowl",
+				"slug": "plain-bowl",
+				"status": "published",
+				"data": {
+					"title": "Plain bowl",
+					"price": "$32",
+					"excerpt": "Porcelain slip",
+					"featured_image": {
+						"$media": {
+							"url": "https://images.unsplash.com/photo-1761830476467-0ff86dbcc75d?w=1600&q=80&fm=jpg&fit=max",
+							"alt": "A plain white bowl",
+							"filename": "kiln-plain-bowl.jpg"
+						}
+					},
+					"content": [
+						{
+							"_type": "block",
+							"_key": "k16",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k17",
+									"text": "One everyday bowl, as plain as we could make it. The stoneware is dipped in a porcelain slip before the glaze, which gives it a soft, quiet white.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k18",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k19",
+									"text": "It is the right size for cereal, soup or a salad for one, and it stacks.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k20",
+							"style": "h2",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k21",
+									"text": "The details",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k22",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k23",
+									"text": "Stoneware with a porcelain slip, fired twice. Dishwasher and microwave safe.",
+									"marks": []
+								}
+							]
+						}
+					]
+				},
+				"taxonomies": {
+					"category": [
+						"bowls"
+					],
+					"tag": [
+						"porcelain-slip"
+					]
+				}
+			},
+			{
+				"id": "product-moss-mug",
+				"slug": "moss-mug",
+				"status": "published",
+				"data": {
+					"title": "Moss mug",
+					"price": "$38",
+					"excerpt": "Ash glaze",
+					"featured_image": {
+						"$media": {
+							"url": "https://images.unsplash.com/photo-1517430536-ef20313aea20?w=1600&q=80&fm=jpg&fit=max",
+							"alt": "A green mug held in two hands",
+							"filename": "kiln-moss-mug.jpg"
+						}
+					},
+					"content": [
+						{
+							"_type": "block",
+							"_key": "k24",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k25",
+									"text": "A rounded mug made to be held in both hands. Its ash glaze pools green in the throwing lines and runs thin and amber at the rim, so no two come out of the kiln alike.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k26",
+							"style": "h2",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k27",
+									"text": "The details",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k28",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k29",
+									"text": "Stoneware with an ash glaze, fired twice. Dishwasher safe; wash by hand to keep the glaze at its best.",
+									"marks": []
+								}
+							]
+						}
+					]
+				},
+				"taxonomies": {
+					"category": [
+						"mugs"
+					],
+					"tag": [
+						"ash-glaze"
+					]
+				}
+			},
+			{
+				"id": "product-pasta-bowls",
+				"slug": "pasta-bowls",
+				"status": "published",
+				"data": {
+					"title": "Pasta bowls",
+					"price": "$110",
+					"excerpt": "Set of four",
+					"featured_image": {
+						"$media": {
+							"url": "https://images.unsplash.com/photo-1525973779373-015bdf68e579?w=1600&q=80&fm=jpg&fit=max",
+							"alt": "Four white bowls",
+							"filename": "kiln-pasta-bowls.jpg"
+						}
+					},
+					"content": [
+						{
+							"_type": "block",
+							"_key": "k30",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k31",
+									"text": "Four wide, shallow bowls for pasta, salads and dinners that need a little room. A low wall keeps everything on the plate, and a broad rim gives you somewhere to rest a fork.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k32",
+							"style": "h2",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k33",
+									"text": "The details",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k34",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k35",
+									"text": "Stoneware, fired twice. Dishwasher and microwave safe. Sold as a set of four.",
+									"marks": []
+								}
+							]
+						}
+					]
+				},
+				"taxonomies": {
+					"category": [
+						"bowls"
 					]
 				}
 			}
 		],
 		"posts": [
 			{
-				"id": "post-1",
-				"slug": "welcome",
+				"id": "post-firing-14",
+				"slug": "firing-14",
 				"status": "published",
 				"data": {
-					"title": "Welcome",
-					"excerpt": "Your first post. Replace this with your own content.",
+					"title": "Firing nº 14",
+					"excerpt": "Thirty-two pieces out of the kiln: morning mugs, moss mugs, and bowls for rice, pasta and everything in between.",
+					"featured_image": {
+						"$media": {
+							"url": "https://images.unsplash.com/photo-1609881583302-61548332039c?w=1600&q=80&fm=jpg&fit=max",
+							"alt": "A potter throwing a pot on the wheel",
+							"filename": "kiln-firing-14.jpg"
+						}
+					},
 					"content": [
 						{
 							"_type": "block",
+							"_key": "k36",
 							"style": "normal",
+							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"text": "This is a starter post. The templates in this project show the basic patterns for querying and rendering EmDash content. Replace them with your own design.",
-									"_key": "k1"
+									"_key": "k37",
+									"text": "The kiln cooled overnight, and this morning we opened it on thirty-two pieces: pairs of morning mugs in speckled white, a run of moss mugs in the ash glaze, plain bowls in porcelain slip, and sets of rice and pasta bowls.",
+									"marks": []
 								}
-							],
-							"_key": "k0"
+							]
 						},
 						{
 							"_type": "block",
+							"_key": "k38",
 							"style": "h2",
+							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"text": "What to do next",
-									"_key": "k3"
+									"_key": "k39",
+									"text": "From one wheel",
+									"marks": []
 								}
-							],
-							"_key": "k2"
+							]
 						},
 						{
 							"_type": "block",
+							"_key": "k40",
 							"style": "normal",
+							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"text": "Open the admin panel to add content, or edit the Astro pages in src/pages to change how content is displayed.",
-									"_key": "k5"
+									"_key": "k41",
+									"text": "Every piece in this firing was thrown, trimmed and glazed by hand on one wheel, then fired twice: once to bisque, once to glaze. The ash glaze moves the most in the second firing, so the moss mugs are the ones that surprise us.",
+									"marks": []
 								}
-							],
-							"_key": "k4"
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k42",
+							"style": "h2",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k43",
+									"text": "When it sells out",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k44",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k45",
+									"text": "Each firing is small. When this one sells out, the next one opens to the list first.",
+									"marks": []
+								}
+							]
 						}
 					]
 				},
 				"taxonomies": {
 					"category": [
-						"general"
+						"firings"
 					],
 					"tag": [
-						"starter",
-						"example"
+						"speckled-white",
+						"ash-glaze",
+						"porcelain-slip"
+					]
+				}
+			}
+		],
+		"pages": [
+			{
+				"id": "about",
+				"slug": "about",
+				"status": "published",
+				"data": {
+					"title": "The studio",
+					"content": [
+						{
+							"_type": "block",
+							"_key": "k46",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k47",
+									"text": "Kiln is one studio and one wheel. We make stoneware for every day: mugs, bowls and plates, in small batches.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k48",
+							"style": "h2",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k49",
+									"text": "Made by hand, fired twice",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k50",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k51",
+									"text": "Every piece is thrown, trimmed and glazed by hand, then fired twice. Each is a little different from the next, and that is the point.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k52",
+							"style": "h2",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k53",
+									"text": "Small firings",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k54",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k55",
+									"text": "We fire in small batches. When a firing sells out, the next one opens to the list first.",
+									"marks": []
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"id": "care",
+				"slug": "care",
+				"status": "published",
+				"data": {
+					"title": "Care",
+					"content": [
+						{
+							"_type": "block",
+							"_key": "k56",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k57",
+									"text": "Our stoneware is made to be used every day.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k58",
+							"style": "h2",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k59",
+									"text": "Washing",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k60",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k61",
+									"text": "Speckled white and porcelain slip pieces are dishwasher safe. Wash ash-glazed pieces by hand to keep the glaze at its best.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k62",
+							"style": "h2",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k63",
+									"text": "Heat",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k64",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k65",
+									"text": "Mugs and bowls are microwave safe. Avoid sudden changes of temperature, such as boiling water into a cold mug straight from the fridge, or a hot bowl onto a wet bench.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k66",
+							"style": "h2",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k67",
+									"text": "Marks",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k68",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k69",
+									"text": "The bare clay at the foot of each piece can pick up marks over time. A little baking soda on a damp cloth lifts them.",
+									"marks": []
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"id": "shipping",
+				"slug": "shipping",
+				"status": "published",
+				"data": {
+					"title": "Shipping",
+					"content": [
+						{
+							"_type": "block",
+							"_key": "k70",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k71",
+									"text": "Prices are in Australian dollars. Payment is taken on Stripe's own checkout page; this site never sees card details.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k72",
+							"style": "h2",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k73",
+									"text": "Packing",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k74",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k75",
+									"text": "Every piece is wrapped by hand in recycled paper and packed in a double-walled box.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k76",
+							"style": "h2",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k77",
+									"text": "Breakages",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k78",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k79",
+									"text": "If a piece arrives broken, send us a photo of it and its box, and we will replace it from the next firing.",
+									"marks": []
+								}
+							]
+						}
 					]
 				}
 			}
