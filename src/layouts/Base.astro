@@ -4,6 +4,8 @@ import { EmDashHead, EmDashBodyStart, EmDashBodyEnd } from "emdash/ui";
 import { createPublicPageContext } from "emdash/page";
 import LiveSearch from "emdash/ui/search";
 import { resolveStarterSiteIdentity } from "../utils/site-identity";
+import SiteFooter from "../components/SiteFooter.astro";
+import "../styles/global.css";
 
 interface Props {
 	title: string;
@@ -37,6 +39,13 @@ const fullTitle = titleIncludesSiteName ? title : `${title} — ${siteTitle}`;
 const pageDescription = description ?? siteTagline;
 const menu = menuResult.data;
 
+// The menu item for the current page, or for the section it is in, is marked as the current one.
+const path = Astro.url.pathname.replace(/\/$/, "") || "/";
+const isCurrent = (url: string) => {
+	const target = url.replace(/\/$/, "") || "/";
+	return target === "/" ? path === "/" : path === target || path.startsWith(`${target}/`);
+};
+
 const pageCtx = createPublicPageContext({
 	Astro,
 	kind: content ? "content" : "custom",
@@ -57,44 +66,88 @@ const pageCtx = createPublicPageContext({
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>{fullTitle}</title>
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400..600&display=swap" />
 		<EmDashHead page={pageCtx} />
 	</head>
-	<body>
+	<body class="flex min-h-screen flex-col">
 		<EmDashBodyStart page={pageCtx} />
 
 		<header>
-			<nav>
-				<a href="/">
+			<div class="wrap flex h-header items-center justify-between gap-8 max-md:h-auto max-md:flex-wrap max-md:gap-x-5 max-md:gap-y-1.5 max-md:pt-4.5 max-md:pb-3.5">
+				<a class="flex-none font-serif text-title-md italic" href="/">
 					{
 						siteLogo ? (
-							<img
-								src={siteLogo.url}
-								alt={siteLogo.alt || siteTitle}
-								style="height:48px;width:auto;margin:-8px 0;display:block;"
-							/>
+							<img class="-my-2 block h-12 w-auto" src={siteLogo.url} alt={siteLogo.alt || siteTitle} />
 						) : (
 							siteTitle
 						)
 					}
 				</a>
-				{
-					menu?.items.map((item) => (
-						<a
-							href={item.url}
-							target={item.target}
-							rel={item.target === "_blank" ? "noopener noreferrer" : undefined}
-						>
-							{item.label}
-						</a>
-					))
-				}
-				<LiveSearch placeholder="Search..." collections={["posts", "pages"]} />
-			</nav>
+				<nav class="flex items-center gap-7 text-label text-neutral-600 max-md:w-full max-md:scrollbar-none max-md:gap-5 max-md:overflow-x-auto max-md:pb-1 dark:text-neutral-400" aria-label="Primary">
+					{
+						menu?.items.map((item) => (
+							<a
+								class="transition-colors duration-200 hover:text-neutral-800 current:border-b current:border-current current:text-neutral-800 max-md:flex-none dark:hover:text-neutral-200 dark:current:text-neutral-200"
+								href={item.url}
+								target={item.target}
+								rel={item.target === "_blank" ? "noopener noreferrer" : undefined}
+								aria-current={isCurrent(item.url) ? "page" : undefined}
+							>
+								{item.label}
+							</a>
+						))
+					}
+					<LiveSearch
+						class="site-search w-search"
+						placeholder="Search…"
+						collections={["products", "posts", "pages"]}
+						routeMap={{ pages: "/:slug" }}
+					/>
+				</nav>
+			</div>
 		</header>
 
-		<main>
+		<main class="wrap flex-1 pt-6 pb-24">
 			<slot />
 		</main>
+
+		<SiteFooter />
+
+		<script is:inline>
+			// The pieces tilt toward the pointer, a few degrees, and settle back when it leaves, as on the home.
+			(() => {
+				if (matchMedia('(prefers-reduced-motion: reduce)').matches || matchMedia('(hover: none)').matches) return;
+				for (const piece of document.querySelectorAll('.piece')) {
+					piece.addEventListener('pointermove', event => {
+						const box = piece.getBoundingClientRect();
+						piece.style.setProperty('--ry', ((event.clientX - box.left) / box.width - .5) * 10 + 'deg');
+						piece.style.setProperty('--rx', ((event.clientY - box.top) / box.height - .5) * -8 + 'deg');
+					});
+					piece.addEventListener('pointerleave', () => { piece.style.removeProperty('--rx'); piece.style.removeProperty('--ry'); });
+				}
+			})();
+
+			// The Pinies' entrance: when their row comes into view, they play the next of the public site's four, in order,
+			// remembered in this browser, never random. Reduced motion, no storage or no script: the Pinies simply stand there.
+			(() => {
+				const order = ['walk', 'skid', 'drop', 'peek'];
+				const still = matchMedia('(prefers-reduced-motion: reduce)').matches || document.documentElement.classList.contains('still');
+				for (const row of document.querySelectorAll('.pinies')) {
+					row.querySelectorAll('.face').forEach((face, i) => face.style.setProperty('--i', String(i)));
+					if (still || !('IntersectionObserver' in window)) { row.dataset.shown = ''; continue; }
+					const seen = new IntersectionObserver(entries => {
+						if (!entries.some(entry => entry.isIntersecting)) return;
+						seen.disconnect();
+						let next = 0;
+						try { next = (Number(localStorage.getItem('tm06-entrance-next')) || 0) % order.length; localStorage.setItem('tm06-entrance-next', String(next + 1)); } catch {}
+						row.dataset.entrance = row.dataset.play || order[next];
+						setTimeout(() => { row.dataset.shown = ''; delete row.dataset.entrance; }, 2600);
+					}, { threshold: 0.6 });
+					seen.observe(row);
+				}
+			})();
+		</script>
 
 		<EmDashBodyEnd page={pageCtx} />
 	</body>

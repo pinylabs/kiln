@@ -28,25 +28,39 @@ const postsWithTags = posts.map((post) => ({
 }));
 ---
 
-<Base title="All Posts">
-	<h1>Posts</h1>
+<Base title="Notes">
+	<header class="page-head">
+		<h1 class="rise page-title">Notes from the studio</h1>
+		<p class="rise max-w-measure text-button text-neutral-600 dark:text-neutral-400" style="--i:1">What came out of the kiln, and what goes in next.</p>
+	</header>
 
 	{
 		postsWithTags.length === 0 ? (
-			<p>No posts yet.</p>
+			<p class="py-10 text-body text-neutral-600 dark:text-neutral-400">No notes yet.</p>
 		) : (
-			<ul>
+			<ul class="grid gap-12">
 				{postsWithTags.map(({ post, tags }) => (
-					<li>
-						<a href={`/posts/${post.id}`}>
-							{post.data.featured_image && (
-								<div {...post.edit.featured_image}><Image image={post.data.featured_image} /></div>
-							)}
-							<h2 {...post.edit.title}>{post.data.title}</h2>
-						</a>
-						{post.data.excerpt && <p {...post.edit.excerpt}>{post.data.excerpt}</p>}
-						{tags.length > 0 && (
+					<li class="reveal hover-zoom grid grid-cols-note gap-x-10 max-md:grid-cols-1">
+						<a class="col-span-full grid grid-cols-subgrid items-center gap-y-4.5" href={`/posts/${post.id}`}>
+							<div class="pic aspect-4/3" {...post.edit.featured_image}>
+								{post.data.featured_image && <Image image={post.data.featured_image} />}
+							</div>
 							<div>
+								{post.data.publishedAt && (
+									<time class="text-caption text-neutral-600 dark:text-neutral-400" datetime={post.data.publishedAt.toISOString()}>
+										{post.data.publishedAt.toLocaleDateString("en-US", {
+											year: "numeric",
+											month: "long",
+											day: "numeric",
+										})}
+									</time>
+								)}
+								<h2 class="mt-2 mb-3.5 font-serif text-display-sm leading-none max-md:text-title-md" {...post.edit.title}>{post.data.title}</h2>
+								{post.data.excerpt && <p class="max-w-excerpt text-body leading-story text-neutral-600 dark:text-neutral-400" {...post.edit.excerpt}>{post.data.excerpt}</p>}
+							</div>
+						</a>
+						{tags.length > 0 && (
+							<div class="chips col-start-2 mt-4 max-md:col-start-auto">
 								{tags.map((t) => (
 									<a href={`/tag/${t.slug}`}>{t.label}</a>
 								))}
@@ -57,14 +71,14 @@ const postsWithTags = posts.map((post) => ({
 			</ul>
 		)
 	}
-	<nav aria-label="Pagination">
-		{cursor && <a href="/posts">First page</a>}
-		{
-			nextCursor && (
-				<a href={`/posts?cursor=${encodeURIComponent(nextCursor)}`}>
-					Next page
-				</a>
-			)
-		}
-	</nav>
+	{
+		(cursor || nextCursor) && (
+			<nav class="pager" aria-label="Pagination">
+				{cursor && <a href="/posts">First page</a>}
+				{nextCursor && (
+					<a href={`/posts?cursor=${encodeURIComponent(nextCursor)}`}>Next page</a>
+				)}
+			</nav>
+		)
+	}
 </Base>

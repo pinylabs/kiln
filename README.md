@@ -11,6 +11,10 @@ A warm EmDash shop for a potter's small firings, its pieces an EmDash collection
 
 It needs Node 22 or later and pnpm. On Cloudflare it uses a D1 database (`DB`) and an R2 bucket (`MEDIA`), as EmDash's Cloudflare templates do.
 
+## Its look
+
+The pages are styled with Tailwind CSS 4. Every colour, face, size, radius and measure is a token in `src/styles/theme.css`, so the look changes there; `src/styles/global.css` holds the motion, the hero's arch and the styles for what EmDash renders itself. Light and dark follow the visitor's system, and all motion stops under `prefers-reduced-motion`.
+
 ## Photos and video
 
 They are linked from their sources and never copied into this repository:
@@ -26,4 +30,4 @@ They are linked from their sources and never copied into this repository:
 
 ## Licence
 
-MIT. Built on EmDash's `starter-cloudflare` template, MIT, Copyright 2026 Cloudflare Inc.; its notice is kept in [LICENSE](LICENSE). Made by the Pinies in [Piny](https://piny.studio/home/).
+MIT. Built on EmDash's `starter-cloudflare` template, MIT, Copyright 2026 Cloudflare Inc.; its notice is kept in [LICENSE](LICENSE). Made by the Pinies in [Piny](https://piny.studio/home/). The Piny Studio mark in `public/brand` is Piny's and is not covered by this template's MIT licence.

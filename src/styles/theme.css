@@ -1,0 +1,179 @@
+/* Kiln's design tokens, the one file that sets the template's look. Every colour, face, size, radius, shadow and
+   measure the pages use is named here, and the markup reaches them only through Tailwind's utilities: change a value
+   here and every page follows. `static` keeps every token in the stylesheet, so a design panel can edit it live. */
+@theme static {
+  /* Tailwind's own palette, type scale and radii are replaced by Kiln's, so nothing off-brand can slip in. */
+  --color-*: initial;
+  --font-*: initial;
+  --text-*: initial;
+  --leading-*: initial;
+  --tracking-*: initial;
+  --radius-*: initial;
+  --shadow-*: initial;
+  --container-*: initial;
+
+  /* Primary: the clay of the glaze. 600 is the light accent, 400 the dark one, 50 the words on a clay ground. */
+  --color-primary: #b5553a;
+  --color-primary-50: #fff7ef;
+  --color-primary-100: #fbe5dc;
+  --color-primary-200: #f5c8b6;
+  --color-primary-300: #eca288;
+  --color-primary-400: #e07a5c;
+  --color-primary-500: #cc6546;
+  --color-primary-600: #b5553a;
+  --color-primary-700: #954530;
+  --color-primary-800: #763728;
+  --color-primary-900: #5a2b20;
+  --color-primary-950: #3a1b14;
+
+  /* Secondary: the sage of an ash glaze. */
+  --color-secondary: #8a9a7b;
+  --color-secondary-50: #f3f5f0;
+  --color-secondary-100: #e3e8dd;
+  --color-secondary-200: #c9d2bf;
+  --color-secondary-300: #adba9f;
+  --color-secondary-400: #9aa98b;
+  --color-secondary-500: #8a9a7b;
+  --color-secondary-600: #6f7e61;
+  --color-secondary-700: #58644d;
+  --color-secondary-800: #444d3c;
+  --color-secondary-900: #33392d;
+  --color-secondary-950: #1f231b;
+
+  /* Tertiary: raw sand, the ground the hero's arch shows between its photos (200). */
+  --color-tertiary: #e9dccb;
+  --color-tertiary-50: #fbf7f2;
+  --color-tertiary-100: #f4ece1;
+  --color-tertiary-200: #e9dccb;
+  --color-tertiary-300: #dcc8ae;
+  --color-tertiary-400: #cbb08d;
+  --color-tertiary-500: #b8976f;
+  --color-tertiary-600: #9c7b56;
+  --color-tertiary-700: #7d6245;
+  --color-tertiary-800: #5f4a35;
+  --color-tertiary-900: #433426;
+  --color-tertiary-950: #2a2018;
+
+  /* Neutral: bone and ink. Light pages use card 50, ground 100, rule 300, soft words 600 and ink 800; dark pages
+     mirror them with ink 200, soft words 400, rule 700, card 900 and ground 950. */
+  --color-neutral: #2a211c;
+  --color-neutral-50: #fbf7f1;
+  --color-neutral-100: #f4eee5;
+  --color-neutral-200: #f1e8dc;
+  --color-neutral-300: #e3d8c8;
+  --color-neutral-400: #b3a497;
+  --color-neutral-500: #948476;
+  --color-neutral-600: #74665b;
+  --color-neutral-700: #3a3029;
+  --color-neutral-800: #2a211c;
+  --color-neutral-900: #241d19;
+  --color-neutral-950: #1c1714;
+
+  /* Faces, loaded from Google Fonts by the layouts. Code keeps the browser's own monospace. */
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-serif: 'Instrument Serif', Georgia, serif;
+  --font-mono: monospace;
+
+  /* Type scale. Each size carries its usual line height and tracking; `leading-*` and `tracking-*` adjust one use. */
+  --text-credit: 12px;
+  --text-credit--line-height: 1.8;
+  --text-caption: 13px;
+  --text-caption--line-height: normal;
+  --text-label: 14px;
+  --text-label--line-height: normal;
+  --text-button: 15px;
+  --text-button--line-height: normal;
+  --text-body: 16px;
+  --text-body--line-height: normal;
+  --text-lede: 17px;
+  --text-lede--line-height: 1.65;
+  --text-intro: 18px;
+  --text-intro--line-height: 1.6;
+  --text-title-sm: 28px;
+  --text-title-sm--line-height: normal;
+  --text-title: 32px;
+  --text-title--line-height: normal;
+  --text-title--letter-spacing: -0.01em;
+  --text-title-md: 34px;
+  --text-title-md--line-height: normal;
+  --text-title-md--letter-spacing: -0.01em;
+  --text-title-lg: 36px;
+  --text-title-lg--line-height: 1;
+  --text-title-xl: 40px;
+  --text-title-xl--line-height: normal;
+  --text-title-xl--letter-spacing: -0.01em;
+  --text-display-xs: 42px;
+  --text-display-xs--line-height: 1;
+  --text-display-xs--letter-spacing: -0.02em;
+  --text-display-sm: 44px;
+  --text-display-sm--line-height: 1;
+  --text-display-sm--letter-spacing: -0.01em;
+  --text-display-md: 52px;
+  --text-display-md--line-height: 0.95;
+  --text-display-md--letter-spacing: -0.02em;
+  --text-display-lg: 60px;
+  --text-display-lg--line-height: 1;
+  --text-display-xl: 64px;
+  --text-display-xl--line-height: 1;
+  --text-display-xl--letter-spacing: -0.02em;
+  --text-display-2xl: 80px;
+  --text-display-2xl--line-height: 0.95;
+  --text-display-2xl--letter-spacing: -0.02em;
+  --text-display-3xl: 112px;
+  --text-display-3xl--line-height: 0.92;
+  --text-display-3xl--letter-spacing: -0.02em;
+
+  --leading-normal: normal;
+  --leading-hero: 0.92;
+  --leading-display: 0.95;
+  --leading-heading: 1.1;
+  --leading-subheading: 1.15;
+  --leading-quote: 1.3;
+  --leading-body: 1.6;
+  --leading-story: 1.65;
+  --leading-prose: 1.7;
+
+  --tracking-normal: 0em;
+  --tracking-title: -0.01em;
+  --tracking-display: -0.02em;
+  --tracking-eyebrow: 0.04em;
+
+  /* Shapes: the pill of every button and chip, the arch's foot, a card, a panel, a thumbnail and inline code. */
+  --radius-pill: 999px;
+  --radius-frame: 24px;
+  --radius-card: 18px;
+  --radius-panel: 14px;
+  --radius-thumb: 10px;
+  --radius-code: 6px;
+
+  --shadow-piece: 0 30px 50px -38px rgb(42 33 28 / 0.6);
+
+  /* Spacing follows Tailwind's 4px step; these are the few fixed sizes that are not a step of it. */
+  --spacing: 0.25rem;
+  --spacing-header: 84px;
+  --spacing-search: 168px;
+  --spacing-results: 280px;
+  --spacing-studio: 560px;
+  --spacing-studio-sm: 340px;
+
+  /* Measures: the page, an article, and the widths of an intro, a lede, an excerpt and a photo. */
+  --container-page: 1240px;
+  --container-article: 760px;
+  --container-measure: 420px;
+  --container-lede: 460px;
+  --container-excerpt: 520px;
+  --container-photo: 560px;
+
+  /* Grids: a footer, a piece's page, a note's picture beside its words, and the sidebar's widgets. */
+  /* The footer: the Pinies and their sentence, then the photo credits. The first track is wide enough for the
+     sentence with Piny Studio's mark to stay on one line on a desktop. */
+  --grid-template-columns-footer: 1.6fr 1fr;
+  --grid-template-columns-product: 1.1fr 1fr;
+  --grid-template-columns-note: 5fr 7fr;
+  --grid-template-columns-widgets: repeat(auto-fit, minmax(240px, 1fr));
+
+  --perspective-tilt: 900px;
+
+  /* Motion: the one easing every glide shares. */
+  --ease-glide: cubic-bezier(0.2, 0.8, 0.2, 1);
+}

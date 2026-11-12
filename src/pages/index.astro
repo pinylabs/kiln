@@ -1,6 +1,8 @@
 ---
 // The preview home, from its accepted design. The full template is being built by the Pinies;
 // until then this page is the theme's home and the rest of the site is EmDash's own template.
+import SiteFooter from "../components/SiteFooter.astro";
+import "../styles/global.css";
 ---
 <!doctype html>
 <html lang="en">
@@ -10,198 +12,35 @@
 <title>Kiln — stoneware made by hand</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400..600&display=swap">
-<style is:global>
-/* The motion every site shares. Only transform and opacity move, so it stays on the compositor at 60 fps. Under
-   prefers-reduced-motion everything is still, and a browser without scroll timelines simply shows the page. */
-
-/* Page changes: the browser's cross-document view transition, as Astro's view transitions give it. A picture that
-   names itself the same on both pages grows into its place; the rest fades and slides. */
-@view-transition { navigation: auto; }
-::view-transition-old(root) { animation: 260ms cubic-bezier(.4, 0, 1, 1) both vt-out; }
-::view-transition-new(root) { animation: 420ms cubic-bezier(0, 0, .2, 1) 80ms both vt-in; }
-::view-transition-group(*) { animation-duration: 520ms; animation-timing-function: cubic-bezier(.2, .8, .2, 1); }
-@keyframes vt-out { to { opacity: 0; transform: translateY(-12px); } }
-@keyframes vt-in { from { opacity: 0; transform: translateY(24px); } }
-
-/* The hero's first moment: its words rise one line after another. */
-.rise { animation: rise .9s cubic-bezier(.2, .8, .2, 1) both; animation-delay: calc(var(--i, 0) * 110ms + 120ms); }
-@keyframes rise { from { opacity: 0; transform: translateY(36px); } }
-
-/* Scroll-driven: reveals move with `translate` and `scale`, so a card's hover `transform` still applies.
-   The hero's photo drifts slower than the page, and its words lift away. */
-@supports (animation-timeline: scroll()) {
-  .parallax { animation: parallax linear both; animation-timeline: scroll(root); animation-range: 0 100vh; }
-  .lift { animation: lift linear both; animation-timeline: scroll(root); animation-range: 0 70vh; }
-  .reveal { animation: reveal linear both; animation-timeline: view(); animation-range: entry 0% entry 70%; }
-  .reveal-side { animation: reveal-side linear both; animation-timeline: view(); animation-range: entry 0% entry 80%; }
-  .zoom-in { animation: zoom-in linear both; animation-timeline: view(); animation-range: entry 0% cover 50%; }
-}
-@keyframes parallax { from { transform: translateY(0) scale(1.08); } to { transform: translateY(22%) scale(1.16); } }
-@keyframes lift { to { opacity: 0; transform: translateY(-90px); } }
-@keyframes reveal { from { opacity: 0; translate: 0 70px; scale: .97; } }
-@keyframes reveal-side { from { opacity: 0; translate: -60px 0; } }
-@keyframes zoom-in { from { transform: scale(1.25); } }
-
-/* Hover, for a site that takes it: a card lifts and its photo leans in. Each site adds its own signature beside it. */
-.lift-card { transition: transform .45s cubic-bezier(.2, .8, .2, 1), box-shadow .45s; }
-.lift-card .pic img { transition: transform .9s cubic-bezier(.2, .8, .2, 1); }
-.lift-card:hover { transform: translateY(-8px); }
-.lift-card:hover .pic img { transform: scale(1.07); }
-.button { transition: transform .25s cubic-bezier(.2, .8, .2, 1), background-color .25s; }
-.button:hover { transform: translateY(-2px); }
-
-/* Calm: opacity only, for a site whose signature is stillness. */
-@supports (animation-timeline: view()) {
-  .fade { animation: fade linear both; animation-timeline: view(); animation-range: entry 0% entry 90%; }
-}
-@keyframes fade { from { opacity: 0; } }
-
-/* The Pinies' entrances, the public site's four, played once when their row comes into view. */
-.pinies[data-entrance] .face { animation-duration: .9s; animation-fill-mode: both; animation-delay: calc(var(--i) * .14s); animation-timing-function: cubic-bezier(.3, .7, .3, 1); }
-.pinies[data-entrance='walk'] .face { animation-name: walk; }
-.pinies[data-entrance='skid'] .face { animation-name: skid; }
-.pinies[data-entrance='drop'] .face { animation-name: drop; animation-timing-function: ease-in; }
-.pinies[data-entrance='peek'] .face { animation-name: peek; }
-.pinies[data-entrance='peek'] .face:last-child { animation-name: peek, wave; animation-duration: .9s, .6s; animation-delay: calc(4 * .14s), 1.5s; animation-fill-mode: both, none; }
-.pinies:not([data-entrance]):not([data-shown]) .face { opacity: 0; }
-@keyframes walk {
-  0% { transform: translateX(-120px); opacity: 0; } 12% { opacity: 1; }
-  20% { transform: translateX(-96px) translateY(-4px); } 35% { transform: translateX(-70px) translateY(0); }
-  50% { transform: translateX(-44px) translateY(-4px); } 65% { transform: translateX(-16px) translateY(0); }
-  80% { transform: translateX(0) translateY(-16px); } 100% { transform: translateX(0) translateY(0); }
-}
-@keyframes skid {
-  0% { transform: translateX(520px) rotate(0); opacity: 0; } 15% { opacity: 1; }
-  65% { transform: translateX(-8px) rotate(-12deg); } 82% { transform: translateX(3px) rotate(3deg); } 100% { transform: translateX(0) rotate(0); }
-}
-@keyframes drop {
-  0% { transform: translateY(-120px); opacity: 0; } 15% { opacity: 1; }
-  60% { transform: translateY(0); } 75% { transform: translateY(-12px); } 90% { transform: translateY(0); } 95% { transform: translateY(-3px); } 100% { transform: translateY(0); }
-}
-@keyframes peek { 0% { transform: translateY(56px); opacity: 0; } 20% { opacity: 1; } 70% { transform: translateY(-5px); } 100% { transform: translateY(0); } }
-@keyframes wave { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-12deg); } 50% { transform: rotate(10deg); } 75% { transform: rotate(-6deg); } }
-
-/* Still: reduced motion, and the stills this mock renders. */
-@media (prefers-reduced-motion: reduce) {
-  @view-transition { navigation: none; }
-  *, *::before, *::after { animation: none !important; transition: none !important; }
-  .pinies .face { opacity: 1 !important; }
-}
-html.still *, html.still *::before, html.still *::after { animation: none !important; transition: none !important; }
-html.still .pinies .face { opacity: 1 !important; }
-</style>
-<style is:global>
-:root {
-  --bone: #f4eee5; --ink: #2a211c; --soft: #74665b; --clay: #b5553a; --sage: #8a9a7b; --card: #fbf7f1; --line: #e3d8c8;
-  --serif: 'Instrument Serif', Georgia, serif; --sans: 'Inter', system-ui, sans-serif;
-}
-@media (prefers-color-scheme: dark) { :root { --bone: #1c1714; --ink: #f1e8dc; --soft: #b3a497; --clay: #e07a5c; --card: #241d19; --line: #3a3029; } }
-* { box-sizing: border-box; margin: 0; }
-html { background: var(--bone); }
-body { background: var(--bone); color: var(--ink); font-family: var(--sans); -webkit-font-smoothing: antialiased; overflow-x: clip; }
-a { color: inherit; text-decoration: none; }
-.wrap { max-width: 1240px; margin: 0 auto; padding: 0 40px; }
-header .wrap { display: flex; align-items: center; justify-content: space-between; height: 84px; }
-.mark { font-family: var(--serif); font-size: 34px; font-style: italic; letter-spacing: -.01em; }
-nav { display: flex; gap: 28px; font-size: 14px; color: var(--soft); align-items: center; }
-nav .bag { color: var(--ink); border-bottom: 1px solid var(--ink); }
-.hero { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; padding: 20px 0 80px; }
-.hero h1 { font-family: var(--serif); font-weight: 400; font-size: 112px; line-height: .92; letter-spacing: -.02em; }
-.hero h1 em { color: var(--clay); }
-.hero p { font-size: 18px; line-height: 1.6; color: var(--soft); max-width: 420px; margin: 24px 0 30px; }
-.hero .cta { display: inline-flex; gap: 10px; align-items: center; background: var(--ink); color: var(--bone); padding: 15px 24px; border-radius: 999px; font-size: 15px; font-weight: 500; }
-/* The signature: an arch of clay-coloured light that the pieces cross through, slowly, one after another. */
-.arch { position: relative; aspect-ratio: 4 / 5; border-radius: 999px 999px 24px 24px; overflow: hidden; background: #e9dccb; }
-.arch img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; animation: cross 18s ease-in-out infinite; }
-.arch img:nth-child(1) { animation-delay: 0s; } .arch img:nth-child(2) { animation-delay: 6s; } .arch img:nth-child(3) { animation-delay: 12s; }
-@keyframes cross { 0% { opacity: 0; transform: scale(1.06); } 8%, 33% { opacity: 1; } 41%, 100% { opacity: 0; transform: scale(1); } }
-html.still .arch img:first-child { opacity: 1; animation: none; }
-@media (prefers-reduced-motion: reduce) { .arch img { animation: none; } .arch img:first-child { opacity: 1; } }
-.arch .tag { position: absolute; left: 22px; bottom: 22px; background: var(--card); padding: 10px 14px; border-radius: 999px; font-size: 13px; }
-.pieces { padding: 24px 0 88px; }
-.pieces .head { display: flex; justify-content: space-between; align-items: end; margin-bottom: 30px; }
-.pieces h2 { font-family: var(--serif); font-weight: 400; font-size: 64px; letter-spacing: -.02em; }
-.pieces .head p { color: var(--soft); font-size: 15px; }
-.grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 24px; perspective: 900px; }
-.piece { grid-column: span 4; transform-style: preserve-3d; transition: transform .5s cubic-bezier(.2, .8, .2, 1); transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); }
-.piece.tall { grid-column: span 5; } .piece.wide { grid-column: span 7; }
-.piece .pic { border-radius: 18px; overflow: hidden; background: var(--card); aspect-ratio: 4 / 5; box-shadow: 0 30px 50px -38px rgba(42, 33, 28, .6); }
-.piece.wide .pic { aspect-ratio: 7 / 5; }
-.piece .pic img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.piece .row { display: flex; justify-content: space-between; align-items: baseline; margin-top: 14px; }
-.piece h3 { font-family: var(--serif); font-weight: 400; font-size: 28px; }
-.piece .buy { font-size: 14px; border: 1px solid var(--ink); border-radius: 999px; padding: 8px 14px; transition: background .2s, color .2s; }
-.piece:hover .buy { background: var(--ink); color: var(--bone); }
-.piece small { display: block; color: var(--soft); font-size: 13px; margin-top: 2px; }
-.studio { background: var(--clay); color: #fff7ef; }
-.studio .wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; padding: 0 40px; }
-.studio .pic { height: 560px; overflow: hidden; }
-.studio .pic img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.studio h2 { font-family: var(--serif); font-weight: 400; font-size: 60px; line-height: 1; }
-.studio p { font-size: 17px; line-height: 1.65; margin-top: 18px; max-width: 460px; opacity: .92; }
-.stripe { padding: 56px 0; text-align: center; color: var(--soft); font-size: 14px; }
-.stripe b { color: var(--ink); font-weight: 600; }
-footer { border-top: 1px solid var(--line); padding: 40px 0 48px; }
-footer .wrap { display: grid; grid-template-columns: 1.2fr 1fr; gap: 40px; align-items: end; }
-footer .made { display: flex; align-items: flex-end; gap: 18px; }
-.pinies { display: flex; }
-.pinies .face { width: 54px; height: 54px; margin-right: -8px; }
-.pinies .face svg { width: 100%; height: 100%; }
-footer .made p { font-size: 14px; line-height: 1.6; color: var(--soft); }
-footer .made a { color: var(--ink); text-decoration: underline; }
-footer .credits { font-size: 12px; line-height: 1.8; color: var(--soft); }
-footer .credits a { text-decoration: underline; text-decoration-color: var(--line); }
-@media (max-width: 767px) {
-  .wrap { padding: 0 18px; }
-  nav a:not(.bag) { display: none; }
-  .hero { grid-template-columns: 1fr; gap: 28px; padding: 8px 0 48px; }
-  .hero h1 { font-size: 64px; }
-  .arch { order: -1; aspect-ratio: 1 / 1; }
-  .pieces h2 { font-size: 42px; }
-  .pieces .head { flex-direction: column; align-items: start; gap: 6px; }
-  .grid { grid-template-columns: 1fr; }
-  .piece, .piece.tall, .piece.wide { grid-column: auto; }
-  .studio .wrap { grid-template-columns: 1fr; padding: 0 0 40px; gap: 24px; }
-  .studio .wrap > div:last-child { padding: 0 18px; }
-  .studio .pic { height: 340px; }
-  .studio h2 { font-size: 40px; }
-  footer .wrap { grid-template-columns: 1fr; }
-  footer .made { flex-direction: column; align-items: flex-start; }
-}
-.still-card { height: 100%; display: grid; place-items: center; background: linear-gradient(135deg, var(--sky1, #bfe8ef), var(--sky2, #ffe2b8)); font-family: var(--display); font-weight: 700; font-size: 34px; color: var(--ink); }
-</style>
 </head>
 <body>
-<header><div class="wrap">
-  <a class="mark" href="/">Kiln</a>
-  <nav><a href="/products">Pieces</a><a href="/about">The studio</a><a href="/care">Care</a><a class="bag" href="#">Bag (1)</a></nav>
+<header><div class="wrap flex h-header items-center justify-between">
+  <a class="font-serif text-title-md italic" href="/">Kiln</a>
+  <nav class="flex items-center gap-7 text-label text-neutral-600 dark:text-neutral-400"><a class="max-md:hidden" href="/products">Pieces</a><a class="max-md:hidden" href="/about">The studio</a><a class="max-md:hidden" href="/care">Care</a><a class="border-b border-current text-neutral-800 dark:text-neutral-200" href="#">Bag (1)</a></nav>
 </div></header>
 <main class="wrap">
-  <section class="hero">
+  <section class="grid grid-cols-2 items-center gap-14 pt-5 pb-20 max-md:grid-cols-1 max-md:gap-7 max-md:pt-2 max-md:pb-12">
     <div>
-      <h1 class="rise" style="--i:0">Made by hand, <em>fired twice.</em></h1>
-      <p class="rise" style="--i:1">Small batches of stoneware from one studio: mugs, bowls and plates for every day. Each piece is a little different, and the checkout is Stripe's own.</p>
+      <h1 class="rise font-serif text-display-3xl leading-hero max-md:text-display-xl" style="--i:0">Made by hand, <em class="text-primary-600 dark:text-primary-400">fired twice.</em></h1>
+      <p class="rise mt-6 mb-7.5 max-w-measure text-intro text-neutral-600 dark:text-neutral-400" style="--i:1">Small batches of stoneware from one studio: mugs, bowls and plates for every day. Each piece is a little different, and the checkout is Stripe's own.</p>
       <a class="cta rise" style="--i:2" href="/products">See this firing →</a>
     </div>
-    <div class="arch"><img src="https://images.unsplash.com/photo-1495100497150-fe209c585f50?w=1600&q=75&auto=format&fit=crop" alt="A grey stoneware mug on a wooden table"><img src="https://images.unsplash.com/photo-1530006498959-b7884e829a04?w=1600&q=75&auto=format&fit=crop" alt="Two speckled bowls"><img src="https://images.unsplash.com/photo-1525973779373-015bdf68e579?w=1600&q=75&auto=format&fit=crop" alt="Four white bowls on white"><span class="tag">Firing nº 14 · 32 pieces</span></div>
+    <div class="arch aspect-4/5 max-md:-order-1 max-md:aspect-square"><img src="https://images.unsplash.com/photo-1495100497150-fe209c585f50?w=1600&q=75&auto=format&fit=crop" alt="A grey stoneware mug on a wooden table"><img src="https://images.unsplash.com/photo-1530006498959-b7884e829a04?w=1600&q=75&auto=format&fit=crop" alt="Two speckled bowls"><img src="https://images.unsplash.com/photo-1525973779373-015bdf68e579?w=1600&q=75&auto=format&fit=crop" alt="Four white bowls on white"><span class="absolute bottom-5.5 left-5.5 rounded-pill bg-neutral-50 px-3.5 py-2.5 text-caption dark:bg-neutral-900">Firing nº 14 · 32 pieces</span></div>
   </section>
-  <section class="pieces">
-    <div class="head"><h2 class="reveal">This firing</h2><p class="reveal">Prices in AUD. Paid on Stripe's checkout page.</p></div>
-    <div class="grid">
-      <a class="piece tall reveal" href="/products/morning-mug-pair"><div class="pic"><img style="view-transition-name: piece-cups" src="https://images.unsplash.com/photo-1536936812504-0e77dc3f0b40?w=1200&q=75&auto=format&fit=crop" alt="Two white stoneware mugs" loading="lazy"></div><div class="row"><div><h3>Morning mug, pair</h3><small>Speckled white · 350 ml</small></div><span class="buy">$68</span></div></a>
-      <a class="piece wide reveal" href="/products/rice-bowls"><div class="pic"><img src="https://images.unsplash.com/photo-1530006498959-b7884e829a04?w=1600&q=75&auto=format&fit=crop" alt="Two speckled bowls" loading="lazy"></div><div class="row"><div><h3>Rice bowls</h3><small>Set of two</small></div><span class="buy">$54</span></div></a>
-      <a class="piece reveal" href="/products/plain-bowl"><div class="pic"><img src="https://images.unsplash.com/photo-1761830476467-0ff86dbcc75d?w=900&q=75&auto=format&fit=crop" alt="A plain white bowl" loading="lazy"></div><div class="row"><div><h3>Plain bowl</h3><small>Porcelain slip</small></div><span class="buy">$32</span></div></a>
-      <a class="piece reveal" href="/products/moss-mug"><div class="pic"><img src="https://images.unsplash.com/photo-1517430536-ef20313aea20?w=900&q=75&auto=format&fit=crop" alt="A green mug held in two hands" loading="lazy"></div><div class="row"><div><h3>Moss mug</h3><small>Ash glaze</small></div><span class="buy">$38</span></div></a>
-      <a class="piece reveal" href="/products/pasta-bowls"><div class="pic"><img src="https://images.unsplash.com/photo-1525973779373-015bdf68e579?w=900&q=75&auto=format&fit=crop" alt="Four white bowls" loading="lazy"></div><div class="row"><div><h3>Pasta bowls</h3><small>Set of four</small></div><span class="buy">$110</span></div></a>
+  <section class="pt-6 pb-22">
+    <div class="mb-7.5 flex items-end justify-between max-md:flex-col max-md:items-start max-md:gap-1.5"><h2 class="reveal font-serif text-display-xl leading-normal max-md:text-display-xs">This firing</h2><p class="reveal text-button text-neutral-600 dark:text-neutral-400">Prices in AUD. Paid on Stripe's checkout page.</p></div>
+    <div class="grid grid-cols-12 gap-6 perspective-tilt max-md:grid-cols-1">
+      <a class="piece reveal col-span-5 max-md:col-auto" href="/products/morning-mug-pair"><div class="pic"><img style="view-transition-name: piece-cups" src="https://images.unsplash.com/photo-1536936812504-0e77dc3f0b40?w=1200&q=75&auto=format&fit=crop" alt="Two white stoneware mugs" loading="lazy"></div><div class="mt-3.5 flex items-baseline justify-between"><div><h3 class="font-serif text-title-sm">Morning mug, pair</h3><small class="mt-0.5 block text-caption text-neutral-600 dark:text-neutral-400">Speckled white · 350 ml</small></div><span class="buy">$68</span></div></a>
+      <a class="piece reveal col-span-7 max-md:col-auto" href="/products/rice-bowls"><div class="pic aspect-7/5"><img src="https://images.unsplash.com/photo-1530006498959-b7884e829a04?w=1600&q=75&auto=format&fit=crop" alt="Two speckled bowls" loading="lazy"></div><div class="mt-3.5 flex items-baseline justify-between"><div><h3 class="font-serif text-title-sm">Rice bowls</h3><small class="mt-0.5 block text-caption text-neutral-600 dark:text-neutral-400">Set of two</small></div><span class="buy">$54</span></div></a>
+      <a class="piece reveal col-span-4 max-md:col-auto" href="/products/plain-bowl"><div class="pic"><img src="https://images.unsplash.com/photo-1761830476467-0ff86dbcc75d?w=900&q=75&auto=format&fit=crop" alt="A plain white bowl" loading="lazy"></div><div class="mt-3.5 flex items-baseline justify-between"><div><h3 class="font-serif text-title-sm">Plain bowl</h3><small class="mt-0.5 block text-caption text-neutral-600 dark:text-neutral-400">Porcelain slip</small></div><span class="buy">$32</span></div></a>
+      <a class="piece reveal col-span-4 max-md:col-auto" href="/products/moss-mug"><div class="pic"><img src="https://images.unsplash.com/photo-1517430536-ef20313aea20?w=900&q=75&auto=format&fit=crop" alt="A green mug held in two hands" loading="lazy"></div><div class="mt-3.5 flex items-baseline justify-between"><div><h3 class="font-serif text-title-sm">Moss mug</h3><small class="mt-0.5 block text-caption text-neutral-600 dark:text-neutral-400">Ash glaze</small></div><span class="buy">$38</span></div></a>
+      <a class="piece reveal col-span-4 max-md:col-auto" href="/products/pasta-bowls"><div class="pic"><img src="https://images.unsplash.com/photo-1525973779373-015bdf68e579?w=900&q=75&auto=format&fit=crop" alt="Four white bowls" loading="lazy"></div><div class="mt-3.5 flex items-baseline justify-between"><div><h3 class="font-serif text-title-sm">Pasta bowls</h3><small class="mt-0.5 block text-caption text-neutral-600 dark:text-neutral-400">Set of four</small></div><span class="buy">$110</span></div></a>
     </div>
   </section>
 </main>
-<section class="studio"><div class="wrap"><div class="pic"><img class="zoom-in" src="https://images.unsplash.com/photo-1609881583302-61548332039c?w=1600&q=75&auto=format&fit=crop" alt="A potter throwing a pot on the wheel" loading="lazy"></div><div class="reveal"><h2>From one wheel, in small firings</h2><p>Every piece is thrown, trimmed and glazed by hand, then fired twice. When a firing sells out, the next one opens to the list.</p></div></div></section>
-<div class="stripe"><b>Checkout by Stripe.</b> Cards and wallets are taken on Stripe's own page; this site never sees them.</div>
-<footer><div class="wrap">
-  <div class="made"><div class="pinies"><span class="face"><svg xmlns="http://www.w3.org/2000/svg" viewBox="-62 -62 124 124" aria-hidden="true" focusable="false"><g><path d="M-12,33 L-13,50" stroke="#7D73D9" stroke-width="4.6" stroke-linecap="round"/><ellipse cx="-15" cy="52" rx="6.5" ry="3.8" fill="#26215C" stroke="#7D73D9" stroke-width="2"/><path d="M12,33 L13,50" stroke="#7D73D9" stroke-width="4.6" stroke-linecap="round"/><ellipse cx="15" cy="52" rx="6.5" ry="3.8" fill="#26215C" stroke="#7D73D9" stroke-width="2"/><path d="M-27.309516212355263,17 Q-39.30951621235526,22 -41.30951621235526,31" stroke="#7D73D9" stroke-width="4.6" fill="none" stroke-linecap="round"/><path d="M27.309516212355263,17 Q35.15475810617763,20 33,27" stroke="#7D73D9" stroke-width="4.6" fill="none" stroke-linecap="round"/><path data-piny-part="outline" d="M0,-41 A41,41 0 1 1 0,41 A41,41 0 1 1 0,-41 Z" fill="#AFA9EC" stroke="#7D73D9" stroke-width="3.2" stroke-linejoin="round"/><ellipse cx="-20" cy="11" rx="5" ry="3" fill="#F06F8B" opacity=".28"/><ellipse cx="20" cy="11" rx="5" ry="3" fill="#F06F8B" opacity=".28"/></g><g><ellipse cx="-13" cy="-7" rx="7.5" ry="7.50" fill="#fff"/><circle cx="-11.5" cy="-6" r="3.80" fill="#2C2C2A"/><circle cx="-10.2" cy="-7.6" r="1.2" fill="#fff"/><ellipse cx="13" cy="-7" rx="7.5" ry="7.50" fill="#fff"/><circle cx="14.5" cy="-6" r="3.80" fill="#2C2C2A"/><circle cx="15.8" cy="-7.6" r="1.2" fill="#fff"/></g><g><path d="M-8.00,13 Q0,18.00 8.00,13" stroke="#26215C" stroke-width="2.8" fill="none" stroke-linecap="round"/></g><g><g class="piny-prop piny-prop-roadmap"><g transform="translate(34,14) rotate(8)"><rect x="0" y="0" width="30" height="23" rx="3" fill="#F7F5EE" stroke="#5F5E5A" stroke-width="1.6"/><path d="M5,18 C10,18 9,9 15,10 C21,11 22,5 25,5" stroke="#534AB7" stroke-width="2" fill="none" stroke-linecap="round"/><circle cx="5" cy="18" r="2" fill="#534AB7"/><circle cx="25" cy="5" r="2.4" fill="#E2533F"/></g></g><circle cx="-41.30951621235526" cy="31" r="4.6" fill="#AFA9EC" stroke="#7D73D9" stroke-width="2"/><circle cx="33" cy="27" r="4.6" fill="#AFA9EC" stroke="#7D73D9" stroke-width="2"/></g></svg></span><span class="face"><svg xmlns="http://www.w3.org/2000/svg" viewBox="-62 -62 124 124" aria-hidden="true" focusable="false"><g><path d="M-12,33 L-13,50" stroke="#45B08D" stroke-width="4.6" stroke-linecap="round"/><ellipse cx="-15" cy="52" rx="6.5" ry="3.8" fill="#04342C" stroke="#45B08D" stroke-width="2"/><path d="M12,33 L13,50" stroke="#45B08D" stroke-width="4.6" stroke-linecap="round"/><ellipse cx="15" cy="52" rx="6.5" ry="3.8" fill="#04342C" stroke="#45B08D" stroke-width="2"/><path d="M-29,17 Q-41,22 -43,31" stroke="#45B08D" stroke-width="4.6" fill="none" stroke-linecap="round"/><path d="M29,17 Q42,21.5 45,30" stroke="#45B08D" stroke-width="4.6" fill="none" stroke-linecap="round"/><path data-piny-part="outline" d="M-39.0,-22.0 Q-39,-39 -22.0,-39.0 L22.0,-39.0 Q39,-39 39.0,-22.0 L39.0,22.0 Q39,39 22.0,39.0 L-22.0,39.0 Q-39,39 -39.0,22.0 Z" fill="#9FE1CB" stroke="#45B08D" stroke-width="3.2" stroke-linejoin="round"/><ellipse cx="-20" cy="11" rx="5" ry="3" fill="#F06F8B" opacity=".28"/><ellipse cx="20" cy="11" rx="5" ry="3" fill="#F06F8B" opacity=".28"/></g><g><ellipse cx="-13" cy="-7" rx="7.5" ry="7.50" fill="#fff"/><circle cx="-11.5" cy="-6" r="3.80" fill="#2C2C2A"/><circle cx="-10.2" cy="-7.6" r="1.2" fill="#fff"/><ellipse cx="13" cy="-7" rx="7.5" ry="7.50" fill="#fff"/><circle cx="14.5" cy="-6" r="3.80" fill="#2C2C2A"/><circle cx="15.8" cy="-7.6" r="1.2" fill="#fff"/></g><g><path d="M-8.00,13 Q0,18.00 8.00,13" stroke="#04342C" stroke-width="2.8" fill="none" stroke-linecap="round"/></g><g><g class="piny-prop piny-prop-stopwatch"><g transform="translate(46,16)"><rect x="-3" y="-15" width="6" height="5" rx="1" fill="#5F5E5A"/><circle cx="0" cy="0" r="12" fill="#F7F5EE" stroke="#5F5E5A" stroke-width="2"/><path d="M0,0 L0,-7 M0,0 L5,3" stroke="#0F6E56" stroke-width="2.2" stroke-linecap="round"/></g></g><circle cx="-43" cy="31" r="4.6" fill="#9FE1CB" stroke="#45B08D" stroke-width="2"/><circle cx="45" cy="30" r="4.6" fill="#9FE1CB" stroke="#45B08D" stroke-width="2"/></g></svg></span><span class="face"><svg xmlns="http://www.w3.org/2000/svg" viewBox="-62 -62 124 124" aria-hidden="true" focusable="false"><g><path d="M-18,34 Q-26,46 -32,51" stroke="#D5684A" stroke-width="4.6" fill="none" stroke-linecap="round"/><ellipse cx="-35" cy="53" rx="6.5" ry="3.8" fill="#4A1B0C" stroke="#D5684A" stroke-width="2"/><path d="M18,34 Q26,46 32,51" stroke="#D5684A" stroke-width="4.6" fill="none" stroke-linecap="round"/><ellipse cx="35" cy="53" rx="6.5" ry="3.8" fill="#4A1B0C" stroke="#D5684A" stroke-width="2"/><path d="M-31.125,27 Q-33.0625,37 -25,51" stroke="#D5684A" stroke-width="4.6" fill="none" stroke-linecap="round"/><path d="M31.125,27 Q33.0625,37 25,51" stroke="#D5684A" stroke-width="4.6" fill="none" stroke-linecap="round"/><path data-piny-part="outline" d="M-6.1,-38.5 Q0,-50 6.1,-38.5 L40.9,26.5 Q47,38 34.0,38.0 L-34.0,38.0 Q-47,38 -40.9,26.5 Z" fill="#F0997B" stroke="#D5684A" stroke-width="3.2" stroke-linejoin="round"/><ellipse cx="-18" cy="21" rx="5" ry="3" fill="#F06F8B" opacity=".28"/><ellipse cx="18" cy="21" rx="5" ry="3" fill="#F06F8B" opacity=".28"/></g><g><ellipse cx="-11" cy="7" rx="7.5" ry="7.50" fill="#fff"/><circle cx="-9.5" cy="8" r="3.80" fill="#2C2C2A"/><circle cx="-8.2" cy="6.4" r="1.2" fill="#fff"/><ellipse cx="11" cy="7" rx="7.5" ry="7.50" fill="#fff"/><circle cx="12.5" cy="8" r="3.80" fill="#2C2C2A"/><circle cx="13.8" cy="6.4" r="1.2" fill="#fff"/></g><g><path d="M-8.00,23 Q0,28.00 8.00,23" stroke="#4A1B0C" stroke-width="2.8" fill="none" stroke-linecap="round"/></g><g><g class="piny-prop piny-prop-laptop"><g transform="translate(0,44)"><rect x="-23" y="-14" width="46" height="23" rx="3" fill="#444441"/><path d="M-6,-8 l-5,5 l5,5 M6,-8 l5,5 l-5,5" stroke="#F7B79F" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><rect x="-28" y="8" width="56" height="5" rx="2" fill="#888780"/></g></g><circle cx="-25" cy="51" r="4.6" fill="#F0997B" stroke="#D5684A" stroke-width="2"/><circle cx="25" cy="51" r="4.6" fill="#F0997B" stroke="#D5684A" stroke-width="2"/></g></svg></span><span class="face"><svg xmlns="http://www.w3.org/2000/svg" viewBox="-62 -62 124 124" aria-hidden="true" focusable="false"><g><path d="M-12,33 L-13,50" stroke="#D99A2B" stroke-width="4.6" stroke-linecap="round"/><ellipse cx="-15" cy="52" rx="6.5" ry="3.8" fill="#412402" stroke="#D99A2B" stroke-width="2"/><path d="M12,33 L13,50" stroke="#D99A2B" stroke-width="4.6" stroke-linecap="round"/><ellipse cx="15" cy="52" rx="6.5" ry="3.8" fill="#412402" stroke="#D99A2B" stroke-width="2"/><path d="M-24.41025641025641,17 Q-36.41025641025641,22 -38.41025641025641,31" stroke="#D99A2B" stroke-width="4.6" fill="none" stroke-linecap="round"/><path d="M24.41025641025641,17 Q44.705128205128204,19.5 55,26" stroke="#D99A2B" stroke-width="4.6" fill="none" stroke-linecap="round"/><path data-piny-part="outline" d="M-26.9,-30.3 Q-22,-39 -12.0,-39.0 L12.0,-39.0 Q22,-39 26.9,-30.3 L39.1,-8.7 Q44,0 39.1,8.7 L26.9,30.3 Q22,39 12.0,39.0 L-12.0,39.0 Q-22,39 -26.9,30.3 L-39.1,8.7 Q-44,0 -39.1,-8.7 Z" fill="#FAC775" stroke="#D99A2B" stroke-width="3.2" stroke-linejoin="round"/><ellipse cx="-20" cy="11" rx="5" ry="3" fill="#F06F8B" opacity=".28"/><ellipse cx="20" cy="11" rx="5" ry="3" fill="#F06F8B" opacity=".28"/></g><g><ellipse cx="-13" cy="-7" rx="7.5" ry="7.50" fill="#fff"/><circle cx="-11.5" cy="-6" r="3.80" fill="#2C2C2A"/><circle cx="-10.2" cy="-7.6" r="1.2" fill="#fff"/><ellipse cx="13" cy="-7" rx="7.5" ry="7.50" fill="#fff"/><circle cx="14.5" cy="-6" r="3.80" fill="#2C2C2A"/><circle cx="15.8" cy="-7.6" r="1.2" fill="#fff"/></g><g><path d="M-8.00,13 Q0,18.00 8.00,13" stroke="#412402" stroke-width="2.8" fill="none" stroke-linecap="round"/></g><g><g class="piny-prop piny-prop-glass"><g transform="translate(44,14)"><circle cx="0" cy="0" r="10" fill="#E6F1FB" fill-opacity=".85" stroke="#5F5E5A" stroke-width="3"/><path d="M7,7 L16,17" stroke="#5F5E5A" stroke-width="4.4" stroke-linecap="round"/></g></g><circle cx="-38.41025641025641" cy="31" r="4.6" fill="#FAC775" stroke="#D99A2B" stroke-width="2"/><circle cx="55" cy="26" r="4.6" fill="#FAC775" stroke="#D99A2B" stroke-width="2"/></g></svg></span><span class="face"><svg xmlns="http://www.w3.org/2000/svg" viewBox="-62 -62 124 124" aria-hidden="true" focusable="false"><g><path d="M-12,28 L-13,45" stroke="#378ADD" stroke-width="4.6" stroke-linecap="round"/><ellipse cx="-15" cy="47" rx="6.5" ry="3.8" fill="#042C53" stroke="#378ADD" stroke-width="2"/><path d="M12,28 L13,45" stroke="#378ADD" stroke-width="4.6" stroke-linecap="round"/><ellipse cx="15" cy="47" rx="6.5" ry="3.8" fill="#042C53" stroke="#378ADD" stroke-width="2"/><path d="M-19,17 Q-31,22 -33,31" stroke="#378ADD" stroke-width="4.6" fill="none" stroke-linecap="round"/><path d="M19,17 Q31,22 33,31" stroke="#378ADD" stroke-width="4.6" fill="none" stroke-linecap="round"/><path data-piny-part="outline" d="M-11.3,-36.7 Q0,-48 11.3,-36.7 L36.7,-11.3 Q48,0 36.7,11.3 L11.3,36.7 Q0,48 -11.3,36.7 L-36.7,11.3 Q-48,0 -36.7,-11.3 Z" fill="#B5D4F4" stroke="#378ADD" stroke-width="3.2" stroke-linejoin="round"/><ellipse cx="-19" cy="11" rx="5" ry="3" fill="#F06F8B" opacity=".28"/><ellipse cx="19" cy="11" rx="5" ry="3" fill="#F06F8B" opacity=".28"/></g><g><ellipse cx="-12" cy="-6" rx="7.5" ry="7.50" fill="#fff"/><circle cx="-10.5" cy="-5" r="3.80" fill="#2C2C2A"/><circle cx="-9.2" cy="-6.6" r="1.2" fill="#fff"/><ellipse cx="12" cy="-6" rx="7.5" ry="7.50" fill="#fff"/><circle cx="13.5" cy="-5" r="3.80" fill="#2C2C2A"/><circle cx="14.8" cy="-6.6" r="1.2" fill="#fff"/></g><g><path d="M-8.00,13 Q0,18.00 8.00,13" stroke="#042C53" stroke-width="2.8" fill="none" stroke-linecap="round"/></g><g><g class="piny-prop piny-prop-bulb"><g transform="translate(40,-26)"><path d="M0,-13 C-8,-13 -12,-7 -12,-2 C-12,3 -8,6 -6,9 L6,9 C8,6 12,3 12,-2 C12,-7 8,-13 0,-13 Z" fill="#FAEEDA" stroke="#5F5E5A" stroke-width="1.8" stroke-linejoin="round"/><rect x="-5" y="10" width="10" height="5" rx="1.5" fill="#5F5E5A"/><path d="M-3,3 L0,-3 L3,3" stroke="#BA7517" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g></g><circle cx="-33" cy="31" r="4.6" fill="#B5D4F4" stroke="#378ADD" stroke-width="2"/><circle cx="33" cy="31" r="4.6" fill="#B5D4F4" stroke="#378ADD" stroke-width="2"/></g></svg></span></div><p>Made by the Pinies in <a href="#">Piny</a>, on EmDash and Stripe.</p></div>
-  <div class="credits">Photos on Unsplash by <a href="https://unsplash.com/photos/white-ceramic-mug-on-wooden-table-top-n42ogaQn32o">Annie Spratt</a>, <a href="https://unsplash.com/photos/two-white-ceramic-bowls-bgIO-u4GEfI">Tom Crew</a>, <a href="https://unsplash.com/photos/a-simple-white-bowl-on-a-white-background-ka8gj7iAMMk">Liu T. Corriveau</a>, <a href="https://unsplash.com/photos/two-white-ceramic-mug-CipURjPCXOo">Katja Vogt</a>, <a href="https://unsplash.com/photos/person-in-blue-denim-jeans-making-clay-pot-7ZK_CuHroq4">Earl Wilcox</a>, <a href="https://unsplash.com/photos/hands-shaping-ceramic-bowl-rim-G4IB-r6nsJI">Anne Nygård</a>, <a href="https://unsplash.com/photos/person-holding-ceramic-mug-RuKqwXCwEos">Odiseo Castrejon</a>.</div>
-</div></footer>
+<section class="bg-primary-600 text-primary-50 dark:bg-primary-400"><div class="wrap grid grid-cols-2 items-center gap-14 max-md:grid-cols-1 max-md:gap-6 max-md:px-0 max-md:pb-10"><div class="h-studio overflow-hidden max-md:h-studio-sm"><img class="zoom-in block size-full object-cover" src="https://images.unsplash.com/photo-1609881583302-61548332039c?w=1600&q=75&auto=format&fit=crop" alt="A potter throwing a pot on the wheel" loading="lazy"></div><div class="reveal max-md:px-4.5"><h2 class="font-serif text-display-lg leading-none tracking-normal max-md:text-title-xl">From one wheel, in small firings</h2><p class="mt-4.5 max-w-lede text-lede opacity-92">Every piece is thrown, trimmed and glazed by hand, then fired twice. When a firing sells out, the next one opens to the list.</p></div></div></section>
+<div class="py-14 text-center text-label text-neutral-600 dark:text-neutral-400"><b class="font-semibold text-neutral-800 dark:text-neutral-200">Checkout by Stripe.</b> Cards and wallets are taken on Stripe's own page; this site never sees them.</div>
+<SiteFooter />
 <script is:inline>
 // The pieces tilt toward the pointer, a few degrees, and settle back when it leaves.
 (() => {

@@ -1,0 +1,300 @@
+/* Kiln's one stylesheet, for the home and every page the Base layout draws. The tokens are in theme.css; the pages
+   are styled with Tailwind's utilities in their markup. What stays here is what utilities cannot say cleanly: the
+   motion, the arch, the cards' shared parts, and the markup EmDash renders itself (Portable Text, widgets, search). */
+
+/* Astro's own image defaults sit below Tailwind's layers, so a utility always wins over them. */
+@layer astro, theme, base, components, utilities;
+@import "tailwindcss";
+@import "./theme.css";
+
+/* Dark follows the visitor's system, as the design always has. */
+@custom-variant dark (@media (prefers-color-scheme: dark));
+/* The menu item for the page being shown. */
+@custom-variant current (&[aria-current="page"]);
+
+@utility scrollbar-none {
+  scrollbar-width: none;
+}
+
+@layer base {
+  /* Tailwind's preflight gives html a line height of 1.5; Kiln's text keeps the browser's normal one. */
+  html {
+    @apply bg-neutral-100 leading-normal dark:bg-neutral-950;
+  }
+  body {
+    @apply overflow-x-clip bg-neutral-100 font-sans text-neutral-800 antialiased dark:bg-neutral-950 dark:text-neutral-200;
+  }
+  /* Preflight greys a placeholder at half the text colour; Kiln keeps the browser's own. */
+  ::placeholder {
+    color: revert;
+    opacity: revert;
+  }
+  :focus-visible {
+    @apply outline-2 outline-offset-3 outline-primary-600 dark:outline-primary-400;
+  }
+  /* EmDash's live search reads its colours from these. */
+  :root {
+    --emdash-search-bg: var(--color-neutral-50);
+    --emdash-search-text: var(--color-neutral-800);
+    --emdash-search-muted: var(--color-neutral-600);
+    --emdash-search-border: var(--color-neutral-300);
+    --emdash-search-border-focus: var(--color-neutral-800);
+    --emdash-search-hover: var(--color-neutral-100);
+    --emdash-search-highlight: var(--color-primary-600);
+    @variant dark {
+      --emdash-search-bg: var(--color-neutral-900);
+      --emdash-search-text: var(--color-neutral-200);
+      --emdash-search-muted: var(--color-neutral-400);
+      --emdash-search-border: var(--color-neutral-700);
+      --emdash-search-border-focus: var(--color-neutral-200);
+      --emdash-search-hover: var(--color-neutral-950);
+      --emdash-search-highlight: var(--color-primary-400);
+    }
+  }
+}
+
+@layer components {
+  /* The page column. */
+  .wrap {
+    @apply mx-auto w-full max-w-page px-10 max-md:px-4.5;
+  }
+
+  /* The ink pill button. */
+  .cta {
+    @apply inline-flex items-center gap-2.5 rounded-pill bg-neutral-800 px-6 py-3.75 text-button font-medium text-neutral-100 dark:bg-neutral-200 dark:text-neutral-950;
+  }
+
+  /* A card's picture: rounded, shadowed, and the photo covers the whole frame whatever its own size. EmDash's image
+     sets `height: auto` in a scoped style outside any layer, hence the one `!important`. */
+  .pic {
+    @apply aspect-4/5 overflow-hidden rounded-card bg-neutral-50 shadow-piece dark:bg-neutral-900;
+    & img {
+      @apply block w-full object-cover;
+      height: 100% !important;
+    }
+  }
+
+  /* A piece's price, a pill that fills with ink while the card is hovered. */
+  .buy {
+    @apply flex-none rounded-pill border border-neutral-800 px-3.5 py-2 text-label dark:border-neutral-200;
+    .piece:hover & {
+      @apply bg-neutral-800 text-neutral-100 dark:bg-neutral-200 dark:text-neutral-950;
+    }
+  }
+
+  /* Chips: a piece's or a note's categories and glazes. */
+  .chips {
+    @apply flex flex-wrap gap-2;
+    & a {
+      @apply rounded-pill border border-neutral-300 px-3 py-1.25 text-caption text-neutral-600 hover:border-neutral-800 hover:text-neutral-800 dark:border-neutral-700 dark:text-neutral-400 dark:hover:border-neutral-200 dark:hover:text-neutral-200;
+    }
+  }
+
+  /* A page's head: its big serif title with a small line beside it. */
+  .page-head {
+    @apply mb-9 flex items-end justify-between gap-6 max-md:flex-col max-md:items-start max-md:gap-1.5;
+  }
+  .page-title {
+    @apply font-serif text-display-xl max-md:text-display-xs;
+  }
+  .section-title {
+    @apply mt-14 mb-6 font-serif text-title-xl max-md:mt-10 max-md:text-title;
+    .page-head + & {
+      @apply mt-0;
+    }
+  }
+
+  /* Pagination, in the home's pill buttons. */
+  .pager {
+    @apply mt-14 flex justify-center gap-3;
+    & a {
+      @apply rounded-pill border border-neutral-800 px-4.5 py-2.5 text-label hover:bg-neutral-800 hover:text-neutral-100 dark:border-neutral-200 dark:hover:bg-neutral-200 dark:hover:text-neutral-950;
+    }
+  }
+
+  /* The signature: an arch of clay-coloured light that the pieces cross through, slowly, one after another.
+     The top corners are a pill wider than the arch, so the browser scales all four corners together. */
+  .arch {
+    @apply relative overflow-hidden rounded-t-pill rounded-b-frame bg-tertiary-200;
+    & img {
+      @apply absolute inset-0 size-full object-cover opacity-0;
+      animation: cross 18s ease-in-out infinite;
+    }
+    & img:nth-child(2) {
+      animation-delay: 6s;
+    }
+    & img:nth-child(3) {
+      animation-delay: 12s;
+    }
+  }
+  @keyframes cross {
+    0% { opacity: 0; transform: scale(1.06); }
+    8%, 33% { opacity: 1; }
+    41%, 100% { opacity: 0; transform: scale(1); }
+  }
+
+  /* Portable Text as the studio writes it. Its spacing is in em, so it follows the text it sits in. */
+  .prose {
+    @apply text-intro leading-prose max-md:text-lede;
+    & > * + * { margin-top: 1.1em; }
+    & h2 { @apply font-serif text-title-lg leading-heading; margin-top: 1.6em; }
+    & h3 { @apply font-serif text-title-sm leading-subheading; margin-top: 1.4em; }
+    & h4 { @apply text-intro leading-prose font-semibold; margin-top: 1.4em; }
+    & a { @apply text-primary-600 underline underline-offset-3 dark:text-primary-400; }
+    & ul, & ol { padding-left: 1.3em; }
+    & ul { @apply list-disc; }
+    & ol { @apply list-decimal; }
+    & li + li { margin-top: 0.4em; }
+    & li::marker { @apply text-primary-600 dark:text-primary-400; }
+    & blockquote { @apply border-l-2 border-primary-600 pl-6 font-serif text-title-sm leading-quote italic dark:border-primary-400; }
+    & figure img, & > img { @apply block h-auto rounded-card; }
+    & figcaption { @apply mt-2.5 text-neutral-600 dark:text-neutral-400; font-size: var(--text-label); }
+    & hr { @apply border-0 border-t border-neutral-300 dark:border-neutral-700; margin: 2em 0; }
+    & code { @apply rounded-code border border-neutral-300 bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-900; font-size: 0.88em; padding: 0.1em 0.35em; }
+    & pre { @apply overflow-x-auto rounded-panel border border-neutral-300 bg-neutral-50 p-4.5 dark:border-neutral-700 dark:bg-neutral-900; font-size: var(--text-button); }
+    & pre code { @apply border-0 bg-transparent p-0; }
+    & table { @apply w-full border-collapse; font-size: var(--text-body); }
+    & th, & td { @apply border-b border-neutral-300 px-3 py-2.5 text-left dark:border-neutral-700; }
+  }
+
+  /* The sidebar's widgets, as EmDash renders them: a band of cards under a piece or a note. */
+  .widget {
+    @apply rounded-card bg-neutral-50 px-6.5 pt-6 pb-7 dark:bg-neutral-900;
+    & ul { @apply grid gap-2.5 text-button; }
+    & li { @apply flex flex-wrap items-baseline gap-2; }
+    & li a:hover { @apply text-primary-600 dark:text-primary-400; }
+  }
+  .widget__title {
+    @apply mb-3.5 font-serif text-title-sm;
+  }
+  .widget-categories__count,
+  .widget-archives__count,
+  .widget-tags__count,
+  .widget-recent-posts__date {
+    @apply text-caption text-neutral-600 dark:text-neutral-400;
+  }
+  .widget-recent-posts__thumbnail {
+    @apply size-12 rounded-thumb object-cover;
+  }
+  /* The tag cloud is a list, but it wraps as a row of pills rather than the widgets' column. */
+  .widget .widget-tags__cloud {
+    @apply flex flex-wrap gap-2;
+  }
+  .widget-tags__link {
+    @apply rounded-pill border border-neutral-300 px-3 py-1.25 text-caption dark:border-neutral-700;
+  }
+  .widget-categories__empty,
+  .widget-tags__empty {
+    @apply text-neutral-600 dark:text-neutral-400;
+  }
+  .widget-search {
+    @apply flex gap-2;
+  }
+  .widget-search__input {
+    @apply min-w-0 flex-1 rounded-pill border border-neutral-300 bg-neutral-100 px-3.5 py-2.25 text-label text-neutral-800 dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-200;
+  }
+  .widget-search__button {
+    @apply cursor-pointer rounded-pill border-0 bg-neutral-800 px-4 py-2.25 text-label text-neutral-100 dark:bg-neutral-200 dark:text-neutral-950;
+  }
+
+  /* The Pinies who made the site, standing in the footer. */
+  .pinies .face {
+    @apply -mr-2 size-13.5;
+    & svg { @apply size-full; }
+  }
+}
+
+/* Motion. Only transform and opacity move, so it stays on the compositor. Under prefers-reduced-motion everything
+   is still, and a browser without scroll timelines simply shows the page. */
+
+/* Page changes: the browser's cross-document view transition. A picture that names itself the same on both pages
+   grows into its place; the rest fades and slides. */
+@view-transition { navigation: auto; }
+@media (prefers-reduced-motion: reduce) {
+  @view-transition { navigation: none; }
+}
+
+@layer components {
+  ::view-transition-old(root) { animation: 260ms cubic-bezier(0.4, 0, 1, 1) both vt-out; }
+  ::view-transition-new(root) { animation: 420ms cubic-bezier(0, 0, 0.2, 1) 80ms both vt-in; }
+  ::view-transition-group(*) { animation-duration: 520ms; animation-timing-function: var(--ease-glide); }
+  @keyframes vt-out { to { opacity: 0; transform: translateY(-12px); } }
+  @keyframes vt-in { from { opacity: 0; transform: translateY(24px); } }
+
+  /* A page's first moment: its words rise one line after another. */
+  .rise { animation: rise 0.9s var(--ease-glide) both; animation-delay: calc(var(--i, 0) * 110ms + 120ms); }
+  @keyframes rise { from { opacity: 0; transform: translateY(36px); } }
+
+  /* Scroll-driven: cards reveal with `translate` and `scale`, so a card's tilt `transform` still applies; the
+     studio's photo settles as it comes into view. */
+  @supports (animation-timeline: view()) {
+    .reveal { animation: reveal linear both; animation-timeline: view(); animation-range: entry 0% entry 70%; }
+    .zoom-in { animation: zoom-in linear both; animation-timeline: view(); animation-range: entry 0% cover 50%; }
+  }
+  @keyframes reveal { from { opacity: 0; translate: 0 70px; scale: 0.97; } }
+  @keyframes zoom-in { from { transform: scale(1.25); } }
+
+  /* The pieces tilt toward the pointer (the layouts' script sets --rx and --ry). */
+  .piece {
+    transform-style: preserve-3d;
+    transition: transform 0.5s var(--ease-glide);
+    transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  }
+  .buy, .pager a { transition: background-color 0.2s, color 0.2s; }
+  .chips a { transition: color 0.2s, border-color 0.2s; }
+  .pic img { transition: transform 0.9s var(--ease-glide); }
+  /* On the inner pages a card's photo leans in while it is hovered. */
+  .hover-zoom:hover .pic img { transform: scale(1.05); }
+  .button { transition: transform 0.25s var(--ease-glide), background-color 0.25s; }
+  .button:hover { transform: translateY(-2px); }
+
+  /* The Pinies' entrances, the public site's four, played once when their row comes into view. */
+  .pinies[data-entrance] .face { animation-duration: 0.9s; animation-fill-mode: both; animation-delay: calc(var(--i) * 0.14s); animation-timing-function: cubic-bezier(0.3, 0.7, 0.3, 1); }
+  .pinies[data-entrance='walk'] .face { animation-name: walk; }
+  .pinies[data-entrance='skid'] .face { animation-name: skid; }
+  .pinies[data-entrance='drop'] .face { animation-name: drop; animation-timing-function: ease-in; }
+  .pinies[data-entrance='peek'] .face { animation-name: peek; }
+  .pinies[data-entrance='peek'] .face:last-child { animation-name: peek, wave; animation-duration: 0.9s, 0.6s; animation-delay: calc(4 * 0.14s), 1.5s; animation-fill-mode: both, none; }
+  .pinies:not([data-entrance]):not([data-shown]) .face { opacity: 0; }
+  @keyframes walk {
+    0% { transform: translateX(-120px); opacity: 0; } 12% { opacity: 1; }
+    20% { transform: translateX(-96px) translateY(-4px); } 35% { transform: translateX(-70px) translateY(0); }
+    50% { transform: translateX(-44px) translateY(-4px); } 65% { transform: translateX(-16px) translateY(0); }
+    80% { transform: translateX(0) translateY(-16px); } 100% { transform: translateX(0) translateY(0); }
+  }
+  @keyframes skid {
+    0% { transform: translateX(520px) rotate(0); opacity: 0; } 15% { opacity: 1; }
+    65% { transform: translateX(-8px) rotate(-12deg); } 82% { transform: translateX(3px) rotate(3deg); } 100% { transform: translateX(0) rotate(0); }
+  }
+  @keyframes drop {
+    0% { transform: translateY(-120px); opacity: 0; } 15% { opacity: 1; }
+    60% { transform: translateY(0); } 75% { transform: translateY(-12px); } 90% { transform: translateY(0); } 95% { transform: translateY(-3px); } 100% { transform: translateY(0); }
+  }
+  @keyframes peek { 0% { transform: translateY(56px); opacity: 0; } 20% { opacity: 1; } 70% { transform: translateY(-5px); } 100% { transform: translateY(0); } }
+  @keyframes wave { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-12deg); } 50% { transform: rotate(10deg); } 75% { transform: rotate(-6deg); } }
+
+  /* Still: reduced motion, and the stills a mock renders with `html.still`. */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .piece { transform: none; }
+    .pinies .face { opacity: 1 !important; }
+    .arch img:first-child { opacity: 1; }
+  }
+  html.still *, html.still *::before, html.still *::after { animation: none !important; transition: none !important; }
+  html.still .pinies .face { opacity: 1 !important; }
+  html.still .arch img:first-child { opacity: 1; }
+}
+
+/* EmDash's live search styles itself in scoped rules outside any layer, so these adjustments stay outside one too,
+   or the search's own rules would win. */
+.site-search .emdash-live-search-input {
+  font: inherit;
+  font-size: var(--text-label);
+  padding: --spacing(2) --spacing(3.5);
+  border-radius: var(--radius-pill);
+}
+.site-search .emdash-live-search-results {
+  border-radius: var(--radius-panel);
+  min-width: var(--spacing-results);
+  left: auto;
+}
